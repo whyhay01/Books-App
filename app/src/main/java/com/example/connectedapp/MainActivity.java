@@ -5,20 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tvResult;
+    TextView tvResult, tvError;
+    private ProgressBar mLoading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLoading = findViewById(R.id.pb_loading);
 
-        URL bookUrl = ApiUtils.buildUrl("android");
+        URL bookUrl = ApiUtils.buildUrl("cooking");
         new BookQueryTask().execute(bookUrl);
 
     }
@@ -40,9 +46,38 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-
             tvResult = findViewById(R.id.tvResponse);
+            tvError = findViewById(R.id.tv_error);
+            mLoading.setVisibility(View.INVISIBLE);
+            if (result==null){
+                tvError.setVisibility(View.VISIBLE);
+                tvResult.setVisibility(View.INVISIBLE);
+            }else {
+
+                tvError.setVisibility(View.INVISIBLE);
+                tvResult.setVisibility(View.VISIBLE);
+            }
             tvResult.setText(result);
+//            ArrayList<Books> books = ApiUtils.getBooksFromJson(result);
+//
+//            String stringResult = "";
+//            for (Books book : books){
+//                stringResult = stringResult + book.title + "\n" +
+//                        book.publishedDate + "\n\n" ;
+//            }
+//
+////            if (stringResult == null){
+////                Log.d(TAG, "onPostExecute: Nothing to show on the screen");
+////            }
+//
+//            tvResult.setText(stringResult);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoading.setVisibility(View.VISIBLE);
         }
     }
 }
