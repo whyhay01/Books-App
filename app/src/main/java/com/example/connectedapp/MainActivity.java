@@ -57,20 +57,16 @@ public class MainActivity extends AppCompatActivity {
                 tvError.setVisibility(View.INVISIBLE);
                 tvResult.setVisibility(View.VISIBLE);
             }
-            tvResult.setText(result);
-//            ArrayList<Books> books = ApiUtils.getBooksFromJson(result);
 //
-//            String stringResult = "";
-//            for (Books book : books){
-//                stringResult = stringResult + book.title + "\n" +
-//                        book.publishedDate + "\n\n" ;
-//            }
-//
-////            if (stringResult == null){
-////                Log.d(TAG, "onPostExecute: Nothing to show on the screen");
-////            }
-//
-//            tvResult.setText(stringResult);
+            ArrayList<Books> books = ApiUtils.getBooksFromJson(result);
+
+            String stringResult = "";
+            for (Books book : books){
+                stringResult = stringResult + book.title + "\n" +
+                        book.publishedDate + "\n\n" ;
+            }
+
+            tvResult.setText(stringResult);
 
         }
 

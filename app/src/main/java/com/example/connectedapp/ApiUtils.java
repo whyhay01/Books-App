@@ -15,11 +15,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.jar.JarException;
 
+import static android.content.ContentValues.TAG;
+
 public class ApiUtils {
     //class will contain static methods and constant and it will never be instantiated
     //it is a good idea to remove the constructors
 
     private ApiUtils(){}
+
 
     //create a constant for the base url
     public static final String BASE_API_URL = "https://www.googleapis.com/books/v1/volumes/";
@@ -80,48 +83,56 @@ public class ApiUtils {
 
     //Parsing JSON
 
-//    public static ArrayList<Books> getBooksFromJson(String json){
-//        final String ID = "id";
-//        final String TITLE = "title";
-//        final String SUBTITLE = "subtitle";
-//        final String AUTHORS = "authors";
-//        final String PUBLISHER = "publisher";
-//        final String PUBLISHED_DATE = "publisherDate";
-//        final String ITEMS = "items";
-//        final String VOLUME_INFO = "volumeInfo";
-//
-//        ArrayList<Books> books = new ArrayList<Books>();
-//
-//        try {
-//            JSONObject jsonBooks = new JSONObject(json);
-//            JSONArray arrayBooks = jsonBooks.getJSONArray(ITEMS);
-//            int numOfBooks = arrayBooks.length();
-//
-//            for (int i = 0; i<numOfBooks; i++){
-//                JSONObject bookJson = arrayBooks.getJSONObject(i);
-//                JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUME_INFO);
-//
-//                //Get Arraylist of authors
-//                int numbersOfAuthors = volumeInfoJson.getJSONArray(AUTHORS).length();
-//                String [] authors = new String[numbersOfAuthors];
-//
-//                for (int j = 0; j<numbersOfAuthors; j++){
-//                    authors[j] = volumeInfoJson.getJSONArray(AUTHORS).get(j).toString();
-//                }
-//                Books addedBooks= new Books(bookJson.getString(ID),
-//                        volumeInfoJson.getString(TITLE),
-//                        (volumeInfoJson.isNull(SUBTITLE)? "":volumeInfoJson.getString(SUBTITLE)),
-//                        authors,
-//                        volumeInfoJson.getString(PUBLISHER),
-//                        volumeInfoJson.getString(PUBLISHED_DATE));
-//
-//                books.add(addedBooks);
-//            }
-//
-//        } catch (JSONException e){
-//            e.printStackTrace();
-//        }
-//
-//        return books;
-//    }
+    public static ArrayList<Books> getBooksFromJson(String json){
+        final String ID = "id";
+        final String TITLE = "title";
+        final String SUBTITLE = "subtitle";
+        final String AUTHORS = "authors";
+        final String PUBLISHER = "publisher";
+        final String PUBLISHED_DATE = "publisherDate";
+        final String ITEMS = "items";
+        final String VOLUME_INFO = "volumeInfo";
+
+        ArrayList<Books> books = new ArrayList<Books>();
+
+        try {
+            JSONObject jsonBooks = new JSONObject(json);
+            JSONArray arrayBooks = jsonBooks.getJSONArray(ITEMS);
+            int numOfBooks = arrayBooks.length();
+
+            for (int i = 0; i<numOfBooks; i++){
+                JSONObject bookJson = arrayBooks.getJSONObject(i);
+
+                Log.d("getBooksFromJson", "bookJson: " + bookJson);
+
+                JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUME_INFO);
+                Log.d("getBooksFromJson", "volume info Json: " + volumeInfoJson);
+
+                //Get Arraylist of authors
+                int numbersOfAuthors = volumeInfoJson.getJSONArray(AUTHORS).length();
+                String [] authors = new String[numbersOfAuthors];
+
+                for (int j = 0; j<numbersOfAuthors; j++){
+                    authors[j] = volumeInfoJson.getJSONArray(AUTHORS).get(j).toString();
+                    Log.d("getBooksFromJson", "Authors: " + authors[j]);
+
+                }
+                Books addedBooks= new Books(bookJson.getString(ID),
+                        volumeInfoJson.getString(TITLE),
+                        (volumeInfoJson.isNull(SUBTITLE)? "":volumeInfoJson.getString(SUBTITLE)),
+                        authors,
+                        volumeInfoJson.getString(PUBLISHER),
+                        volumeInfoJson.getString(PUBLISHED_DATE));
+
+                Log.d("getBooksFromJson", "Book title: " + volumeInfoJson.getString(TITLE));
+
+                books.add(addedBooks);
+            }
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return books;
+    }
 }
