@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
     TextView tvError;
     private ProgressBar mLoading;
     private RecyclerView rvBooks;
@@ -40,6 +41,27 @@ public class MainActivity extends AppCompatActivity{
         URL bookUrl = ApiUtils.buildUrl("cooking");
         new BookQueryTask().execute(bookUrl);
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        try {
+            URL url = ApiUtils.buildUrl(query);
+            new BookQueryTask().execute(url);
+
+        }catch (Exception e){
+
+            Log.d("error", e.getMessage());
+
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     public class BookQueryTask extends AsyncTask <URL, Void, String> {
@@ -87,4 +109,14 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.book_menu, menu);
+        final MenuItem searchItem = menu.findItem(R.id.bookSearch);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+        return true;
+
+    }
 }
