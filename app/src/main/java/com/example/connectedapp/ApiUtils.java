@@ -89,7 +89,7 @@ public class ApiUtils {
         final String SUBTITLE = "subtitle";
         final String AUTHORS = "authors";
         final String PUBLISHER = "publisher";
-        final String PUBLISHED_DATE = "publisherDate";
+        final String PUBLISHED_DATE = "publishedDate";
         final String ITEMS = "items";
         final String VOLUME_INFO = "volumeInfo";
 
@@ -124,7 +124,14 @@ public class ApiUtils {
                         volumeInfoJson.getString(PUBLISHER),
                         volumeInfoJson.getString(PUBLISHED_DATE));
 
-                Log.d("getBooksFromJson", "Book title: " + volumeInfoJson.getString(TITLE));
+                if (addedBooks == null){
+                    Log.d("getBooksFromJson", "addedBooks is null ==> no book was added to Books class");
+                }else {
+                    Log.d("getBooksFromJson", "addedBooks has data ==> " + addedBooks);
+
+                }
+
+
 
                 books.add(addedBooks);
             }

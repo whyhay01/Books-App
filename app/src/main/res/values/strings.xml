@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Connected App</string>
     <string name="get_error_message">Error Loading Data from the Google Books API</string>
+    <string name="publisher">Publisher</string>
+    <string name="authors">Authors</string>
+    <string name="title">Title</string>
+    <string name="published_date">Published Date</string>
+    <string name="search">Search</string>
 </resources>
