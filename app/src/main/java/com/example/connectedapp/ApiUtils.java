@@ -92,6 +92,7 @@ public class ApiUtils {
         final String PUBLISHED_DATE = "publishedDate";
         final String ITEMS = "items";
         final String VOLUME_INFO = "volumeInfo";
+        final String DESCRIPTION = "description";
 
         ArrayList<Books> books = new ArrayList<Books>();
 
@@ -122,7 +123,8 @@ public class ApiUtils {
                         (volumeInfoJson.isNull(SUBTITLE)? "":volumeInfoJson.getString(SUBTITLE)),
                         authors,
                         volumeInfoJson.getString(PUBLISHER),
-                        volumeInfoJson.getString(PUBLISHED_DATE));
+                        volumeInfoJson.getString(PUBLISHED_DATE),
+                        volumeInfoJson.isNull(DESCRIPTION)? "":volumeInfoJson.getString(DESCRIPTION));
 
                 if (addedBooks == null){
                     Log.d("getBooksFromJson", "addedBooks is null ==> no book was added to Books class");

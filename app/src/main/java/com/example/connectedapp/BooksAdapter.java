@@ -1,6 +1,7 @@
 package com.example.connectedapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         return books.size();
     }
 
-    public class BookViewHolder extends RecyclerView.ViewHolder {
+    public class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txtTitle;
         TextView txtAuthor;
         TextView txtPublisher;
@@ -52,25 +53,34 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
             txtAuthor = itemView.findViewById(R.id.tvAuthor);
             txtPublisher = itemView.findViewById(R.id.tvPublisher);
             txtPublishedDate = itemView.findViewById(R.id.tvPublishedDate);
+            itemView.setOnClickListener(this);
 
         }
 
         public void bind (Books books){
             txtTitle.setText(books.title);
-            String authors= "";
-            int i = 0;
-            for (String author : books.authors) {
-
-                authors += author;
-                i++;
-
-                if (i<books.authors.length){
-                    authors+=" , ";
-                }
-            }
-            txtAuthor.setText(authors);
+            txtAuthor.setText(books.authors);
             txtPublisher.setText(books.publisher);
             txtPublishedDate.setText(books.publishedDate);
+        }
+
+        @Override
+        public void onClick(View v) {
+            //get the position of the book a user selected
+            int position = getAdapterPosition();
+
+            // We get the book that was selected
+            Books selectedBook = books.get(position);
+
+            //Create an Intent to move to the BookDetail activity
+            Intent intent = new Intent(v.getContext(), BookDetails.class);
+
+            //To transfer the data to the next activity we use the putExtra() method
+            intent.putExtra("book", selectedBook);
+            v.getContext().startActivity(intent);
+
+
+
         }
     }
 }
