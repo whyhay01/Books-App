@@ -3,6 +3,11 @@ package com.example.connectedapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
+
+import com.squareup.picasso.Picasso;
 
 public class Books implements Parcelable {
 
@@ -13,8 +18,9 @@ public class Books implements Parcelable {
     public String publisher;
     public String publishedDate;
     public String description;
+    public String thumbnail;
 
-    public Books(String id, String title, String subTitle, String[] authors, String publisher, String publishedDate, String description) {
+    public Books(String id, String title, String subTitle, String[] authors, String publisher, String publishedDate, String description, String thumbnail) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -22,6 +28,7 @@ public class Books implements Parcelable {
         this.publisher = publisher;
         this.publishedDate = publishedDate;
         this.description = description;
+        this.thumbnail = thumbnail;
     }
 
     protected Books(Parcel in) {
@@ -32,6 +39,7 @@ public class Books implements Parcelable {
         publisher = in.readString();
         publishedDate = in.readString();
         description = in.readString();
+        thumbnail = in.readString();
     }
 
     public static final Creator<Books> CREATOR = new Creator<Books>() {
@@ -60,5 +68,14 @@ public class Books implements Parcelable {
         dest.writeString(publisher);
         dest.writeString(publishedDate);
         dest.writeString(description);
+        dest.writeString(thumbnail);
+    }
+    @BindingAdapter({"android:imageUrl"})
+
+    public static void loadImage(ImageView view, String imageUrl){
+        Picasso.with(view.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.book_icon)
+                .into(view);
     }
 }

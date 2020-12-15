@@ -93,6 +93,8 @@ public class ApiUtils {
         final String ITEMS = "items";
         final String VOLUME_INFO = "volumeInfo";
         final String DESCRIPTION = "description";
+        final String IMAGE_LINKS = "imageLinks";
+        final String THUMBNAIL = "thumbnail";
 
         ArrayList<Books> books = new ArrayList<Books>();
 
@@ -109,6 +111,8 @@ public class ApiUtils {
                 JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUME_INFO);
                 Log.d("getBooksFromJson", "volume info Json: " + volumeInfoJson);
 
+                JSONObject imageLinksJSon = volumeInfoJson.getJSONObject(IMAGE_LINKS);
+
                 //Get Arraylist of authors
                 int numbersOfAuthors = volumeInfoJson.getJSONArray(AUTHORS).length();
                 String [] authors = new String[numbersOfAuthors];
@@ -124,7 +128,8 @@ public class ApiUtils {
                         authors,
                         volumeInfoJson.getString(PUBLISHER),
                         volumeInfoJson.getString(PUBLISHED_DATE),
-                        volumeInfoJson.isNull(DESCRIPTION)? "":volumeInfoJson.getString(DESCRIPTION));
+                        volumeInfoJson.isNull(DESCRIPTION)? "":volumeInfoJson.getString(DESCRIPTION),
+                        imageLinksJSon.getString(THUMBNAIL));
 
                 if (addedBooks == null){
                     Log.d("getBooksFromJson", "addedBooks is null ==> no book was added to Books class");
