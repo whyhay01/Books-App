@@ -6,4 +6,11 @@
     <string name="title">Title</string>
     <string name="published_date">Published Date</string>
     <string name="search">Search</string>
+    <string name="hint_title">Insert name</string>
+    <string name="hint_author">Insert author(s)</string>
+    <string name="hint_publisher">Insert Publisher</string>
+    <string name="hint_ISBN">Insert ISBN</string>
+    <string name="advance_search">ADVANCE SEARCH</string>
+
+    <string name="no_entry">PLease enter a valid search term</string>
 </resources>

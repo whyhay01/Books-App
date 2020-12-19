@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -35,6 +36,12 @@ public class ApiUtils {
 
     public static final String API_KEY = "AIzaSyAABwfjIL3lHl1FUWMSHTxSJquEoUAfwBQ";
 
+    //create constant for the advance search tool
+    public static final String TITLE = "intitle:";
+    public static final String AUTHOR = "inauthor:";
+    public static final String PUBLISHER = "inpublisher:";
+    public static final String ISBN = "isbn:";
+
     //Create and build url connection
     public static URL buildUrl (String title){
 
@@ -43,6 +50,7 @@ public class ApiUtils {
                 .appendQueryParameter(QUERY_PARAMETER_KEY,title)
                 .appendQueryParameter(KEY,API_KEY)
                 .build();
+
 
         //convert the uri to url
         URL url = null;
@@ -53,6 +61,38 @@ public class ApiUtils {
         } catch (Exception e){
             e.printStackTrace();
         }
+        return url;
+    }
+
+//    Creating the advanced search and building it
+
+    public static URL buildUrl (String title, String author, String publisher, String isbn){
+        URL url = null;
+
+        StringBuilder sb = new StringBuilder();
+        if (!title.isEmpty()) sb.append(TITLE + title + "+");
+        if (!author.isEmpty()) sb.append(AUTHOR + author + "+");
+        if (!publisher.isEmpty()) sb.append(PUBLISHER + publisher + "+");
+        if (!isbn.isEmpty()) sb.append(ISBN + isbn + "+");
+        sb.setLength(sb.length()-1);
+        String query = sb.toString();
+
+        //creating a URI builder
+
+        Uri uri = Uri.parse(BASE_API_URL).buildUpon()
+                .appendQueryParameter(QUERY_PARAMETER_KEY, query)
+                .appendQueryParameter(KEY, API_KEY)
+                .build();
+
+        try {
+            url = new URL(uri.toString());
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+        }
+
         return url;
     }
 
@@ -111,12 +151,22 @@ public class ApiUtils {
                 JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUME_INFO);
                 Log.d("getBooksFromJson", "volume info Json: " + volumeInfoJson);
 
-                JSONObject imageLinksJSon = volumeInfoJson.getJSONObject(IMAGE_LINKS);
+                JSONObject imageLinksJSon = null;
+
+                if (volumeInfoJson.has(IMAGE_LINKS)){
+                    imageLinksJSon = volumeInfoJson.getJSONObject(IMAGE_LINKS);
+                }
 
                 //Get Arraylist of authors
-                int numbersOfAuthors = volumeInfoJson.getJSONArray(AUTHORS).length();
-                String [] authors = new String[numbersOfAuthors];
+                int numbersOfAuthors;
+                try {
+                    numbersOfAuthors = volumeInfoJson.getJSONArray(AUTHORS).length();
 
+                } catch (Exception e){
+                    numbersOfAuthors = 0;
+                }
+
+                String [] authors = new String[numbersOfAuthors];
                 for (int j = 0; j<numbersOfAuthors; j++){
                     authors[j] = volumeInfoJson.getJSONArray(AUTHORS).get(j).toString();
                     Log.d("getBooksFromJson", "Authors: " + authors[j]);
@@ -126,10 +176,10 @@ public class ApiUtils {
                         volumeInfoJson.getString(TITLE),
                         (volumeInfoJson.isNull(SUBTITLE)? "":volumeInfoJson.getString(SUBTITLE)),
                         authors,
-                        volumeInfoJson.getString(PUBLISHER),
-                        volumeInfoJson.getString(PUBLISHED_DATE),
+                        (volumeInfoJson.isNull(PUBLISHER)? "":volumeInfoJson.getString(PUBLISHER)),
+                        (volumeInfoJson.isNull(PUBLISHED_DATE)? "":volumeInfoJson.getString(PUBLISHED_DATE)),
                         volumeInfoJson.isNull(DESCRIPTION)? "":volumeInfoJson.getString(DESCRIPTION),
-                        imageLinksJSon.getString(THUMBNAIL));
+                        (imageLinksJSon==null)? "":imageLinksJSon.getString(THUMBNAIL));
 
                 if (addedBooks == null){
                     Log.d("getBooksFromJson", "addedBooks is null ==> no book was added to Books class");
