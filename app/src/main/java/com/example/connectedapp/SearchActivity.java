@@ -2,6 +2,7 @@ package com.example.connectedapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +44,20 @@ public class SearchActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                 }else {
                     URL queryUrl = ApiUtils.buildUrl(title,author,publisher,ISBN);
+
+                    Context context = getApplicationContext();
+                    int position = SpUtil.getPrefInt(context, SpUtil.POSITION);
+
+                    if (position ==0 || position == 5){
+                        position = 1;
+                    }else {
+                        position++;
+                    }
+                    String key = SpUtil.QUERY + String.valueOf(position);
+                    String value = title + ", "+ author + ", " + publisher + ", " + ISBN;
+                    SpUtil.setPrefString(context,key,value);
+                    SpUtil.setPrefInt(context, SpUtil.POSITION, position);
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("QUERY", queryUrl.toString());
                     startActivity(intent);
